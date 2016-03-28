@@ -1,6 +1,9 @@
 import unittest
 from ..src.parser import Parser
 import datetime
+from pprint import pprint
+
+
 
 class TestParser(unittest.TestCase):
 	
@@ -34,10 +37,22 @@ class TestParser(unittest.TestCase):
 		self.assertEqual(races, test_races)
 	
 	def test_getHorses(self):
+		test_horses = [
+			{'age': 5, 'gender': u'H', 'id': 1, 'name': u'BRAQUEUR DE BRAY'},
+			{'age': 5, 'gender': u'H', 'id': 2, 'name': u'BLACK HOLE SUN'},
+			{'age': 5, 'gender': u'H', 'id': 3, 'name': u'BLUEBERRY DE COUET'},
+			{'age': 5, 'gender': u'M', 'id': 4, 'name': u'BOLIDE JIEL'},
+			{'age': 5, 'gender': u'H', 'id': 5, 'name': u'BONCHAMP GEDE'},
+			{'age': 5, 'gender': u'H', 'id': 6, 'name': u'BISTROT'},
+			{'age': 5, 'gender': u'M', 'id': 7, 'name': u'BILBAO BOY'},
+			{'age': 5, 'gender': u'H', 'id': 8, 'name': u'BALOU DU PAOU'},
+			{'age': 5, 'gender': u'H', 'id': 9, 'name': u'BLASON DU BOSQUET'}
+		]
 		date = '2016-01-01'
 		reunionId = 1
 		raceId = 1
 		horses = Parser.getHorses(datetime.datetime.strptime(date, '%Y-%m-%d').date(), reunionId, raceId)
+		self.assertEqual(horses, test_horses)
 			
 if __name__ == '__main__':
     unittest.main()
