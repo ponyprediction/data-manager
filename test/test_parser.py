@@ -93,12 +93,42 @@ class TestParser(unittest.TestCase):
 		self.assertEqual(array, test_array)
 	
 	def test_getOdds(self):
+		test_array = [{'id': 1, 'odds1': 29.6, 'odds2': 8.0, 'odds3': 20.2},
+			{'id': 2, 'odds1': 5.3, 'odds2': 7.7, 'odds3': 5.0},
+			{'id': 3, 'odds1': 10.9, 'odds2': 6.1, 'odds3': 7.8},
+			{'id': 4, 'odds1': 8.2, 'odds2': 6.1, 'odds3': 6.1},
+			{'id': 5, 'odds1': 17.8, 'odds2': 8.0, 'odds3': 11.8},
+			{'id': 6, 'odds1': 26.0, 'odds2': 6.4, 'odds3': 11.8},
+			{'id': 7, 'odds1': 4.4, 'odds2': 7.7, 'odds3': 5.4},
+			{'id': 8, 'odds1': 4.9, 'odds2': 8.8, 'odds3': 5.4},
+			{'id': 9, 'odds1': 4.5, 'odds2': 6.6, 'odds3': 5.6}]
 		date = '2016-01-01'
 		reunionId = 1
 		raceId = 1
 		array = Parser.getOdds(datetime.datetime.strptime(date, '%Y-%m-%d').date(), reunionId, raceId)
-		pprint(array)
-			
+		self.assertEqual(array, test_array)
+		
+	def test_getArrival(self):
+		test_array = [{'horse': u'BOLIDE JIEL', 'id': 4, 'place': 1},
+			{'horse': u'BALOU DU PAOU', 'id': 8, 'place': 2},
+			{'horse': u'BISTROT', 'id': 6, 'place': 3},
+			{'horse': u'BLASON DU BOSQUET', 'id': 9, 'place': 4},
+			{'horse': u'BONCHAMP GEDE', 'id': 5, 'place': 5},
+			{'horse': u'BLUEBERRY DE COUET', 'id': 3, 'place': 6}]
+		date = '2016-01-01'
+		reunionId = 1
+		raceId = 1
+		array = Parser.getArrival(datetime.datetime.strptime(date, '%Y-%m-%d').date(), reunionId, raceId)
+		self.assertEqual(array, test_array)
+	
+	def test_getArrival(self):
+		test_array = [{'trainer': u'Desmarres S.', 'prediction': None, 'id': 1, 'horse': u'BRAQUEUR DE BRAY', 'jockey': u'Desmarres Au.', 'gender': u'H', 'age': 5, 'place': None, 'odds3': 20.2, 'odds2': 8.0, 'odds1': 29.6}, {'trainer': u'Leblanc F.', 'prediction': 2, 'id': 2, 'horse': u'BLACK HOLE SUN', 'jockey': u'Jublot Y.', 'gender': u'H', 'age': 5, 'place': None, 'odds3': 5.0, 'odds2': 7.7, 'odds1': 5.3}, {'trainer': u'Hubert A.', 'prediction': None, 'id': 3, 'horse': u'BLUEBERRY DE COUET', 'jockey': u'Grimault A. Ph.', 'gender': u'H', 'age': 5, 'place': 6, 'odds3': 7.8, 'odds2': 6.1, 'odds1': 10.9}, {'trainer': u'Dersoir J.L.', 'prediction': None, 'id': 4, 'horse': u'BOLIDE JIEL', 'jockey': u'Rochard B.', 'gender': u'M', 'age': 5, 'place': 1, 'odds3': 6.1, 'odds2': 6.1, 'odds1': 8.2}, {'trainer': u'Sassier M.', 'prediction': 4, 'id': 5, 'horse': u'BONCHAMP GEDE', 'jockey': u'Prioul F.', 'gender': u'H', 'age': 5, 'place': 5, 'odds3': 11.8, 'odds2': 8.0, 'odds1': 17.8}, {'trainer': u'Devouassoux Th.', 'prediction': None, 'id': 6, 'horse': u'BISTROT', 'jockey': u'Mlle Le Coz Ch.', 'gender': u'H', 'age': 5, 'place': 3, 'odds3': 11.8, 'odds2': 6.4, 'odds1': 26.0}, {'trainer': u'Dreux Y.', 'prediction': 1, 'id': 7, 'horse': u'BILBAO BOY', 'jockey': u'Jublot L.', 'gender': u'M', 'age': 5, 'place': None, 'odds3': 5.4, 'odds2': 7.7, 'odds1': 4.4}, {'trainer': u'Le Bezvoet Y.J.', 'prediction': 3, 'id': 8, 'horse': u'BALOU DU PAOU', 'jockey': u'Kondritz M.', 'gender': u'H', 'age': 5, 'place': 2, 'odds3': 5.4, 'odds2': 8.8, 'odds1': 4.9}, {'trainer': u'Delacour G.', 'prediction': 5, 'id': 9, 'horse': u'BLASON DU BOSQUET', 'jockey': u'Dromigny T.', 'gender': u'H', 'age': 5, 'place': 4, 'odds3': 5.6, 'odds2': 6.6, 'odds1': 4.5}]
+		date = '2016-01-01'
+		reunionId = 1
+		raceId = 1
+		array = Parser.getRaceData(datetime.datetime.strptime(date, '%Y-%m-%d').date(), reunionId, raceId)
+		self.assertEqual(array, test_array)
+					
 if __name__ == '__main__':
     unittest.main()
 

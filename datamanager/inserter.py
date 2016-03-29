@@ -2,6 +2,7 @@ from conf import Conf
 from parser import Parser
 import datetime
 import sys
+from pprint import pprint
 
 class Inserter:
 	def __init__(self, start, end, force = False):
@@ -23,30 +24,10 @@ class Inserter:
 		self.overwrite('')
 		print '\rDone'
 		
-	def insertRace(self, date, reunion, localId):
-		raceId = date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(localId)
+	def insertRace(self, date, reunion, race):
+		raceId = date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(race)
 		self.overwrite(raceId)
-		horsesStart = Parser.getHorsesStart(date, reunion, localId)
-		horsesChoice = Parser.getHorsesChoice(date, reunion, localId)
-		jockeysStart = Parser.getJockeysStart(date, reunion, localId)
-		trainersStart = Parser.getTrainersStart(date, reunion, localId)
-		array = []
-		for i, value in enumerate(horsesStart):
-			id = horsesStart[i]['id']
-			prediction = None
-			for x in horsesChoice:
-				if x['id'] == id:
-					prediction = x['place']
-					break
-			array.append({'id':id, 
-				'prediction':prediction, 
-				'horse':horsesStart[i]['name'], 
-				'gender':horsesStart[i]['gender'], 
-				'age':horsesStart[i]['age'],
-				'jockey':jockeysStart[i]['name'],
-				'trainer':trainersStart[i]['name']
-			})
-		return array
+		data = Parser.getRaceData(date, reunion, race)
 	
 	def overwrite(self, m):
 		sys.stdout.write('\r')
