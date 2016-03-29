@@ -1,6 +1,6 @@
-"""from parser import Parser
-import datetime
+"""from . import *
+import unittest
 
-date = datetime.datetime.strptime('2016-01-01', '%Y-%m-%d').date()
-reunions = Parser.getReunions(date)
-print reunions"""
+if __name__ == "__main__":
+    unittest.main()
+    """
