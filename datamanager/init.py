@@ -1,4 +1,4 @@
-from conf import Conf
+from datamanager.conf import Conf
 import os
 
 directories = []
@@ -13,5 +13,5 @@ directories.append(Conf.HTML_ARRIVALS_PATH)
 for directory in directories:
 	if not os.path.exists(directory):
 		os.makedirs(directory)
-		print directory
+		print(directory)
 

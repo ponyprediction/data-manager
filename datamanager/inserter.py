@@ -1,5 +1,5 @@
-from conf import Conf
-from parser import Parser
+from datamanager.conf import Conf
+from datamanager.parser import Parser
 import datetime
 import sys
 from pprint import pprint
@@ -11,7 +11,7 @@ class Inserter:
 		self.force = force
 		
 	def insert(self):
-		print 'Insert from ' + self.start.strftime('%Y-%m-%d') + ' to ' + self.end.strftime('%Y-%m-%d')
+		print('Insert from ' + self.start.strftime('%Y-%m-%d') + ' to ' + self.end.strftime('%Y-%m-%d'))
 		date = self.start
 		day = datetime.timedelta(days=1)
 		while date <= self.end:
@@ -22,7 +22,7 @@ class Inserter:
 					self.insertRace(date, reunion['localId'], race['localId'])
 			date = date + day
 		self.overwrite('')
-		print '\rDone'
+		print('\rDone')
 		
 	def insertRace(self, date, reunion, race):
 		raceId = date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(race)

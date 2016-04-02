@@ -1,5 +1,5 @@
-from downloader import Downloader
-from inserter import Inserter
+from datamanager.downloader import Downloader
+from datamanager.inserter import Inserter
 import sys
 
 if len(sys.argv) == 6:

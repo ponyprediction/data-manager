@@ -1,4 +1,4 @@
-from conf import Conf
+from datamanager.conf import Conf
 from bs4 import BeautifulSoup
 import re
 from pprint import pprint

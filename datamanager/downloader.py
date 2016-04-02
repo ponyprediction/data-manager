@@ -1,7 +1,7 @@
-from conf import Conf
-from parser import Parser
+from datamanager.conf import Conf
+from datamanager.parser import Parser
 import datetime
-import urllib2
+import urllib.request
 import re
 import os
 import sys
@@ -13,7 +13,7 @@ class Downloader:
 		self.force = force
 		
 	def download(self):
-		print 'Download from ' + self.start.strftime('%Y-%m-%d') + ' to ' + self.end.strftime('%Y-%m-%d')
+		print('Download from ' + self.start.strftime('%Y-%m-%d') + ' to ' + self.end.strftime('%Y-%m-%d'))
 		date = self.start	
 		day = datetime.timedelta(days=1)
 		while date <= self.end:
@@ -26,7 +26,7 @@ class Downloader:
 					self.downloadRace(date, reunion['localId'], race['localId'], race['globalId'])
 			date = date + day
 		self.overwrite('')
-		print '\rDone'
+		print('\rDone')
 			
 	def downloadDay(self, date):
 		self.overwrite(date.strftime('%Y-%m-%d'))
@@ -65,14 +65,14 @@ class Downloader:
 		self.downloadHtml(url, path)
 	
 	def getHtml(self, url):
-		response = urllib2.urlopen(url)
+		response = urllib.request.urlopen(url)
 		html = response.read()
 		return html
 	
 	def downloadHtml(self, url, path):
 		if not os.path.isfile(path) or self.force:
 			html = self.getHtml(url)
-			f = open(path, 'w')
+			f = open(path, 'wb')
 			f.seek(0)
 			f.write(html)
 			f.close()
