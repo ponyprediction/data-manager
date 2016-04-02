@@ -28,6 +28,7 @@ class Inserter:
 		raceId = date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(race)
 		self.overwrite(raceId)
 		data = Parser.getRaceData(date, reunion, race)
+		return data
 	
 	def overwrite(self, m):
 		sys.stdout.write('\r')

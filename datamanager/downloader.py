@@ -47,16 +47,19 @@ class Downloader:
 		self.downloadArrival(date, reunion, localId, globalId)
 		
 	def downloadStart(self, date, reunion, localId, globalId):
+		self.overwrite(date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(localId) + '-S')
 		url = Conf.START_URL.replace('ID',str(globalId))
 		path = Conf.START_HTML.replace('DATE',date.strftime('%Y-%m-%d')).replace('REUNION_ID',str(reunion)).replace('RACE_ID',str(localId))
 		self.downloadHtml(url, path)
 		
 	def downloadOdds(self, date, reunion, localId, globalId):
+		self.overwrite(date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(localId) + '-O')
 		url = Conf.ODDS_URL.replace('ID',str(globalId))
 		path = Conf.ODDS_HTML.replace('DATE',date.strftime('%Y-%m-%d')).replace('REUNION_ID',str(reunion)).replace('RACE_ID',str(localId))
 		self.downloadHtml(url, path)
 		
 	def downloadArrival(self, date, reunion, localId, globalId):
+		self.overwrite(date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(localId) + '-A')
 		url = Conf.ARRIVAL_URL.replace('ID',str(globalId))
 		path = Conf.ARRIVAL_HTML.replace('DATE',date.strftime('%Y-%m-%d')).replace('REUNION_ID',str(reunion)).replace('RACE_ID',str(localId))
 		self.downloadHtml(url, path)

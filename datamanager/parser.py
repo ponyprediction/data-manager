@@ -233,13 +233,14 @@ class Parser:
 		
 	@staticmethod
 	def getRaceData(date, reunion, race):
+		raceId = date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(race)
 		horsesStart = Parser.getHorsesStart(date, reunion, race)
 		horsesChoice = Parser.getHorsesChoice(date, reunion, race)
 		jockeysStart = Parser.getJockeysStart(date, reunion, race)
 		trainersStart = Parser.getTrainersStart(date, reunion, race)
 		odds = Parser.getOdds(date, reunion, race)
 		arrival = Parser.getArrival(date, reunion, race)
-		array = []
+		teams = []
 		for i, value in enumerate(horsesStart):
 			id = horsesStart[i]['id']
 			horse = horsesStart[i]['name']
@@ -253,7 +254,7 @@ class Parser:
 				if x['id'] == id and x['horse'] == horse:
 					place = x['place']
 					break
-			array.append({'id':id, 
+			teams.append({'id':id, 
 				'prediction':prediction, 
 				'horse':horse, 
 				'gender':horsesStart[i]['gender'], 
@@ -265,7 +266,8 @@ class Parser:
 				'odds3':odds[i]['odds3'],
 				'place':place
 			})
-		return array
+		race = {'id':raceId, 'teams':teams}
+		return race
 		
 	
 	
