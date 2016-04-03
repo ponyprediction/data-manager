@@ -13,7 +13,7 @@ class TestInserter(unittest.TestCase):
 		reunionId = 1
 		raceId = 1
 		l = Inserter(date, date).insertRace(datetime.datetime.strptime(date, '%Y-%m-%d').date(), reunionId, raceId)
-		#pprint(l)
+		pprint(l)
 		#self.assertEqual(l, test_l)
 			
 if __name__ == '__main__':

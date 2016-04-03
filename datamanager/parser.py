@@ -230,6 +230,41 @@ class Parser:
 		horse = re.sub(r'-', '', horse)
 		horse = horse.strip()
 		return horse
+
+	@staticmethod
+	def getMoney(date, reunion, race):
+		path = Conf.ARRIVAL_HTML.replace('DATE',date.strftime('%Y-%m-%d')).replace('REUNION_ID',str(reunion)).replace('RACE_ID',str(race))
+		f = open(path, 'r')
+		html = f.read()
+		f.close()
+		soup = BeautifulSoup(html, "lxml")
+		table = soup.find_all('table', 'excel')[1]
+		lines = table.find_all('tr')
+		array = []
+		for line in lines:
+			cells = line.find_all('td')
+			if len(cells) == 5 and cells[0].getText().strip():
+				id = int(re.search(r'\d+', cells[0].getText()).group())
+				win = Parser.getCleanMoney(cells[1].getText())
+				second = Parser.getCleanMoney(cells[2].getText())
+				show = Parser.getCleanMoney(cells[3].getText())
+				fourth = Parser.getCleanMoney(cells[4].getText())
+				array.append({'id': id, 'win': win, 'second': second, 'fourth': fourth, 'show': show})
+			if len(cells) == 4 and cells[0].getText().strip():
+				id = int(re.search(r'\d+', cells[0].getText()).group())
+				win = Parser.getCleanMoney(cells[1].getText())
+				second = Parser.getCleanMoney(cells[2].getText())
+				show = Parser.getCleanMoney(cells[3].getText())
+				array.append({'id': id, 'win': win, 'second': second, 'show': show})
+		return array
+	
+	@staticmethod
+	def getCleanMoney(money):
+		money = re.sub(r'€', '', money)
+		money = money.strip()
+		money = re.sub(r'Remboursé', '1.0', money)
+		money = float(money if money else 0.0)
+		return money
 		
 	@staticmethod
 	def getRaceData(date, reunion, race):
@@ -240,12 +275,17 @@ class Parser:
 		trainersStart = Parser.getTrainersStart(date, reunion, race)
 		odds = Parser.getOdds(date, reunion, race)
 		arrival = Parser.getArrival(date, reunion, race)
+		money = Parser.getMoney(date, reunion, race)
 		teams = []
 		for i, value in enumerate(horsesStart):
 			id = horsesStart[i]['id']
 			horse = horsesStart[i]['name']
 			prediction = None
 			place = None
+			fourth = 0.0
+			second = 0.0
+			win = 0.0
+			show = 0.0
 			for x in horsesChoice:
 				if x['id'] == id:
 					prediction = x['place']
@@ -253,6 +293,13 @@ class Parser:
 			for x in arrival:
 				if x['id'] == id and x['horse'] == horse:
 					place = x['place']
+					break
+			for x in money:
+				if x['id'] == id:
+					win = x['win']
+					second = x['second']
+					show = x['show']
+					fourth = x.get('fourth', fourth)
 					break
 			teams.append({'id':id, 
 				'prediction':prediction, 
@@ -264,7 +311,11 @@ class Parser:
 				'odds1':odds[i]['odds1'],
 				'odds2':odds[i]['odds2'],
 				'odds3':odds[i]['odds3'],
-				'place':place
+				'place':place,
+				'win':win,
+				'second':second,
+				'fourth':fourth,
+				'show':show
 			})
 		race = {'id':raceId, 'teams':teams}
 		return race
