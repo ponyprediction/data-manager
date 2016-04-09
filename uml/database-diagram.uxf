@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?><diagram program="umlet" version="12.1">
+  <help_text/>
+  <zoom_level>9</zoom_level>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>99</x>
+      <y>378</y>
+      <w>135</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Horse
+--
+- id : int
+- name : varchar
+- gender : char</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>351</x>
+      <y>378</y>
+      <w>180</w>
+      <h>270</h>
+    </coordinates>
+    <panel_attributes>Team
+--
+- id : int
+- horseId : int
+- jockeyId : int
+- trainerId : int
+
+- start : int
+- prediction : int
+- odds1 : double
+- odds2 : double
+- odds3 : double
+
+- arrival : int
+- firstMoney : double
+- secondMoney : double
+- fourthMoney : double
+- showMoney : double
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>99</x>
+      <y>468</y>
+      <w>135</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Jockey
+--
+- id : int
+- name : varchar </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>99</x>
+      <y>549</y>
+      <w>135</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Trainer
+--
+- id : int
+- name : varchar </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>207</x>
+      <y>360</y>
+      <w>161</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>
+lt=&gt;
+m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>27;27;144;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>207</x>
+      <y>450</y>
+      <w>161</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>
+lt=&gt;
+m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>27;27;144;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>207</x>
+      <y>531</y>
+      <w>161</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>
+lt=&gt;
+m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>27;27;144;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>189</x>
+      <y>675</y>
+      <w>116</w>
+      <h>44</h>
+    </coordinates>
+    <panel_attributes>
+lt=&gt;
+m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>27;27;99;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>351</x>
+      <y>99</y>
+      <w>126</w>
+      <h>108</h>
+    </coordinates>
+    <panel_attributes>Race
+--
+- id : int
+- date : date
+- teamCount : int
+- length : int
+- type : varchar</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>387</x>
+      <y>306</y>
+      <w>89</w>
+      <h>89</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;
+m1=0..n
+m2=1</panel_attributes>
+    <additional_attributes>27;72;72;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>774</x>
+      <y>90</y>
+      <w>99</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Reunion
+--
+- id : int
+- date : date</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>567</x>
+      <y>153</y>
+      <w>117</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>RaceInReunion
+--
+- id : int
+- race : int
+- reunion : int</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>450</x>
+      <y>81</y>
+      <w>134</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>27;27;117;81</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>657</x>
+      <y>72</y>
+      <w>134</w>
+      <h>107</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;
+m1=0..n
+m2=0..n</panel_attributes>
+    <additional_attributes>117;27;27;90</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>279</x>
+      <y>684</y>
+      <w>44</w>
+      <h>125</h>
+    </coordinates>
+    <panel_attributes>
+lt=&gt;
+m1=1
+m2=0..n</panel_attributes>
+    <additional_attributes>27;108;27;27</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>972</x>
+      <y>153</y>
+      <w>117</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>ReunionInDay
+--
+- id : int
+- reunion : int
+- day : int</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>1179</x>
+      <y>90</y>
+      <w>144</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Day
+--
+- date : date
+- reunionCount : int</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>846</x>
+      <y>72</y>
+      <w>143</w>
+      <h>107</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;
+m1=0..n
+m2=0..n</panel_attributes>
+    <additional_attributes>27;27;126;90</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>1062</x>
+      <y>72</y>
+      <w>134</w>
+      <h>107</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;
+m1=0..n
+m2=0..n</panel_attributes>
+    <additional_attributes>117;27;27;90</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>405</x>
+      <y>252</y>
+      <w>117</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>TeamInRace
+--
+- id : int
+- team : int
+- race : int</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Relation</type>
+    <coordinates>
+      <x>396</x>
+      <y>180</y>
+      <w>80</w>
+      <h>89</h>
+    </coordinates>
+    <panel_attributes>lt=&gt;
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>27;27;63;72</additional_attributes>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>225</x>
+      <y>792</y>
+      <w>171</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>Start
+--
+- id : int
+- oddsWin : double
+- oddsPlaced : double
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.umlet.element.Class</type>
+    <coordinates>
+      <x>45</x>
+      <y>693</y>
+      <w>171</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>Arrival
+--
+- id : int
+- place : varchar
+- win : bool
+- winMoney : double
+- placed : bool
+- placedMoney : double
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
