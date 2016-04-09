@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS `reunions`;
+CREATE TABLE IF NOT EXISTS `reunions` (
+	`id` int NOT NULL AUTO_INCREMENT,
+	`date` date NOT NULL,
+	PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
