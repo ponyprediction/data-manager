@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS `trainers`;
-CREATE TABLE IF NOT EXISTS `trainers` (
-	`id` int(11) NOT NULL AUTO_INCREMENT,
-	`name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-	PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+drop table if exists `trainers`;
+create table if not exists `trainers` (
+	`id` int(11) not null auto_increment,
+	`name` varchar(255) collate utf8_unicode_ci not null unique,
+	primary key (id)
+) engine=InnoDB default charset=utf8 collate=utf8_unicode_ci;
 

@@ -301,8 +301,8 @@ class Parser:
 					show = x['show']
 					fourth = x.get('fourth', fourth)
 					break
-			teams.append({'id':id, 
-				'prediction':prediction, 
+			teams.append({'start':id, 
+				'prediction':prediction if prediction else 0, 
 				'horse':horse, 
 				'gender':horsesStart[i]['gender'], 
 				'age':horsesStart[i]['age'],
@@ -311,11 +311,11 @@ class Parser:
 				'odds1':odds[i]['odds1'],
 				'odds2':odds[i]['odds2'],
 				'odds3':odds[i]['odds3'],
-				'place':place,
-				'win':win,
-				'second':second,
-				'fourth':fourth,
-				'show':show
+				'arrival':place if place else 0,
+				'firstMoney':win,
+				'secondMoney':second,
+				'fourthMoney':fourth,
+				'showMoney':show
 			})
 		race = {'id':raceId, 'teams':teams}
 		return race
