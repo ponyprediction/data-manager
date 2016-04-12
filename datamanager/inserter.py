@@ -14,10 +14,8 @@ class Inserter:
 				password='ponyprediction',
 				host='localhost',
 				database='ponyprediction')
-		self.c = 0
 				
 	def __del__(self):
-		print(self.c)
 		self.database.close()
 		
 	def insert(self):
@@ -36,33 +34,70 @@ class Inserter:
 		
 	def insertRace(self, date, reunion, race):
 		self.overwrite(date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(race))
-		raceId = date.strftime('%Y-%m-%d') + str(reunion) + str(race)
+		raceId = date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(race)
 		data = Parser.getRaceData(date, reunion, race)
+		teams = []
 		for team in data['teams']:
 			horseId = self.insertHorse(team['age'], team['gender'], team['horse'])
 			jockeyId = self.insertJockey(team['jockey'])
 			trainerId = self.insertTrainer(team['trainer'])
-			self.insertTeam(horseId, jockeyId, trainerId, team)
-			self.c = self.c + 1
-		return data
+			teams.append(self.insertTeam(raceId, horseId, jockeyId, trainerId, team))
+		#raceId = self.insertRace2(date, reunion, race, len(teams))
+		#self.insertTeamsInRaces(teams, raceId)
+		#return data
 	
-	def insertTeam(self, horseId, jockeyId, trainerId, team):
+	"""def insertTeamsInRaces(self, teams, raceId):
 		cursor = self.database.cursor()
-		request = ("""INSERT INTO teams 
-				(horseId, jockeyId, trainerId, 
-					start, prediction, arrival,
-					odds1, odds2, odds3,
-					firstMoney, secondMoney, 
-					fourthMoney, showMoney)
-				VALUES (%s, %s, %s, %s, %s, %s,
-					%s, %s, %s, %s, %s, %s, %s);""")
-		data = (horseId, jockeyId, trainerId, 
-				team['start'], team['prediction'], team['arrival'],
-				team['odds1'], team['odds2'], team['odds3'],
-				team['firstMoney'], team['secondMoney'], 
-				team['fourthMoney'], team['showMoney'])
-		cursor.execute(request, data)
+		for teamId in teams:
+			cursor.execute('SELECT COUNT(*) '
+					'FROM teamsInRaces '
+					'WHERE (raceId=%s AND teamId=%s)',(raceId, teamId,))
+			if not cursor.fetchone()[0]:
+				request = ('INSERT INTO teamsInRaces '
+						'(age, gender, name) '
+						'VALUES (%s, %s, %s);')
+				data = (raceId, teamId,)
+				try:
+				    cursor.execute(request, data)
+				    self.database.commit()
+				except:
+				    print(cursor.statement)
+				    raise
+		cursor.close()"""
+			
+			
+	
+	def insertTeam(self, raceId, horseId, jockeyId, trainerId, team):
+		cursor = self.database.cursor()
+		cursor.execute('SELECT COUNT(*) '
+				'FROM teams '
+				'WHERE (raceId=%s AND horseId=%s AND jockeyId=%s AND trainerId=%s)',(raceId, horseId, jockeyId, trainerId,))
+		if not cursor.fetchone()[0]:
+			request = ("""INSERT INTO teams 
+					(raceId, horseId, jockeyId, trainerId, 
+						start, prediction, arrival,
+						odds1, odds2, odds3,
+						firstMoney, secondMoney, 
+						fourthMoney, showMoney)
+					VALUES (%s, %s, %s, %s, %s, %s, %s,
+						%s, %s, %s, %s, %s, %s, %s);""")
+			data = (raceId, horseId, jockeyId, trainerId, 
+					team['start'], team['prediction'], team['arrival'],
+					team['odds1'], team['odds2'], team['odds3'],
+					team['firstMoney'], team['secondMoney'], 
+					team['fourthMoney'], team['showMoney'])
+			try:
+				cursor.execute(request, data)
+				self.database.commit()
+			except:
+			    print(cursor.statement)
+			    raise
+		cursor.execute('SELECT id '
+				'FROM teams '
+				'WHERE (raceId=%s AND horseId=%s AND jockeyId=%s AND trainerId=%s)',(raceId, horseId, jockeyId, trainerId,))
+		id = cursor.fetchone()[0]
 		cursor.close()
+		return id
 			
 	def insertHorse(self, age, gender, name):
 		cursor = self.database.cursor()
