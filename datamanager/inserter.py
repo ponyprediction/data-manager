@@ -42,8 +42,8 @@ class Inserter:
 			jockeyId = self.insertJockey(team['jockey'])
 			trainerId = self.insertTrainer(team['trainer'])
 			teams.append(self.insertTeam(raceTextId, horseId, jockeyId, trainerId, team))
-		raceId = self.insertRace2(raceTextId, date, reunion, race, len(teams))
-		#self.insertTeamsInRaces(teams, raceId)
+		raceId = self.insertRace2(raceTextId, date, len(teams))
+		self.insertTeamsInRaces(teams, raceId)
 		#return data
 	
 	
@@ -53,7 +53,7 @@ class Inserter:
 				'FROM races '
 				'WHERE (textId=%s)',(textId,))
 		if not cursor.fetchone()[0]:
-			request = ('INSERT INTO teams '
+			request = ('INSERT INTO races '
 					'(textId, date, teamCount, length, type) '
 					'VALUES (%s, %s, %s, %s, %s);')
 			data = (textId, date, teamCount, 0, 0)
@@ -78,8 +78,8 @@ class Inserter:
 					'WHERE (raceId=%s AND teamId=%s)',(raceId, teamId,))
 			if not cursor.fetchone()[0]:
 				request = ('INSERT INTO teamsInRaces '
-						'(age, gender, name) '
-						'VALUES (%s, %s, %s);')
+						'(raceId, teamId) '
+						'VALUES (%s, %s);')
 				data = (raceId, teamId,)
 				try:
 				    cursor.execute(request, data)
