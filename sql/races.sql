@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS `races`;
 CREATE TABLE IF NOT EXISTS `races` (
 	`id` int(11) not null AUTO_INCREMENT,
+	`textId` varchar(255) not null,
 	`date` date not null,
 	`teamCount` int not null,
 	`length` int not null,

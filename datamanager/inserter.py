@@ -34,19 +34,43 @@ class Inserter:
 		
 	def insertRace(self, date, reunion, race):
 		self.overwrite(date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(race))
-		raceId = date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(race)
+		raceTextId = date.strftime('%Y-%m-%d') + '-' + str(reunion) + '-' + str(race)
 		data = Parser.getRaceData(date, reunion, race)
 		teams = []
 		for team in data['teams']:
 			horseId = self.insertHorse(team['age'], team['gender'], team['horse'])
 			jockeyId = self.insertJockey(team['jockey'])
 			trainerId = self.insertTrainer(team['trainer'])
-			teams.append(self.insertTeam(raceId, horseId, jockeyId, trainerId, team))
-		#raceId = self.insertRace2(date, reunion, race, len(teams))
+			teams.append(self.insertTeam(raceTextId, horseId, jockeyId, trainerId, team))
+		raceId = self.insertRace2(raceTextId, date, reunion, race, len(teams))
 		#self.insertTeamsInRaces(teams, raceId)
 		#return data
 	
-	"""def insertTeamsInRaces(self, teams, raceId):
+	
+	def insertRace2(self, textId, date, teamCount):
+		cursor = self.database.cursor()
+		cursor.execute('SELECT COUNT(*) '
+				'FROM races '
+				'WHERE (textId=%s)',(textId,))
+		if not cursor.fetchone()[0]:
+			request = ('INSERT INTO teams '
+					'(textId, date, teamCount, length, type) '
+					'VALUES (%s, %s, %s, %s, %s);')
+			data = (textId, date, teamCount, 0, 0)
+			try:
+				cursor.execute(request, data)
+				self.database.commit()
+			except:
+			    print(cursor.statement)
+			    raise
+		cursor.execute('SELECT id '
+				'FROM races '
+				'WHERE (textId=%s)',(textId,))
+		id = cursor.fetchone()[0]
+		cursor.close()
+		return id
+	
+	def insertTeamsInRaces(self, teams, raceId):
 		cursor = self.database.cursor()
 		for teamId in teams:
 			cursor.execute('SELECT COUNT(*) '
@@ -63,7 +87,7 @@ class Inserter:
 				except:
 				    print(cursor.statement)
 				    raise
-		cursor.close()"""
+		cursor.close()
 			
 			
 	
