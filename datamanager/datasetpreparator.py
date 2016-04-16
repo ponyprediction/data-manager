@@ -36,45 +36,72 @@ class DatasetPreparator:
 			raceIds.append(id)
 		cursor.close();
 		data = []
-		for raceId in raceIds:	
+		for raceId in raceIds:
+			print(raceId)
 			data.append(self.getDataForRace(raceId, date))
 		return data
 	
 	def getDataForRace(self, raceId, date):
 		cursor = self.database.cursor()
-		cursor.execute('''select teamId 
-				from teamsInRaces
-				where (raceId=%s);''',
+		cursor.execute('''SELECT teams.id
+				FROM teams, teamsInRaces
+				WHERE (teams.id = teamsInRaces.teamId
+					AND teamsInRaces.raceId = %s)
+				ORDER BY teams.start ASC''',
 				(raceId,));
 		teamIds = []
 		for (teamId,) in cursor:
 			teamIds.append(teamId)
 		cursor.close();
-		data = []
-		for teamId in teamIds:	
-			data.append(self.getDataForTeam(teamId, date))
-		return data
+		inputs = []
+		winners = Database.getWinners(raceId)
+		shows = Database.getShows(raceId)
+		for (teamId) in teamIds:
+			inputs.append(self.getDataForTeam(teamId, date))
+		return [winners, shows, inputs]
 			
 	def getDataForTeam(self, teamId, date):
-		trainerIds = Database.getTrainersForTeam(teamId)
 		data = []
-		for trainerId in trainerIds:
+		trainerIds = Database.getMembersInTeam(teamId)
+		for (horseId, jockeyId, trainerId) in trainerIds:
+			data.extend(self.getDataForHorse(horseId, date))
+			data.extend(self.getDataForJockey(jockeyId, date))
 			data.extend(self.getDataForTrainer(trainerId, date))
 		return data
+	
+	def getDataForHorse(self, horseId, date):
+		raceCount = float(Database.getRaceCountHorseBefore(horseId, date))
+		race1 = float(Database.getRaceCountAtArrivalByHorseBefore(horseId, date, '1'))
+		race2 =  float(Database.getRaceCountAtArrivalByHorseBefore(horseId, date, '2'))
+		race3 = float(Database.getRaceCountAtArrivalByHorseBefore(horseId, date, '3'))
+		percent1 = race1 / raceCount if raceCount else 0
+		percent2 = race2 / raceCount if raceCount else 0
+		percent3 = race3 / raceCount if raceCount else 0
+		percentShow = (race1+race2+race3) / raceCount if raceCount else 0
+		return [raceCount, percent1, percent2, percent3, percentShow]
+	
+	def getDataForJockey(self, jockeyId, date):
+		raceCount = float(Database.getRaceCountJockeyBefore(jockeyId, date))
+		race1 = float(Database.getRaceCountAtArrivalByJockeyBefore(jockeyId, date, '1'))
+		race2 =  float(Database.getRaceCountAtArrivalByJockeyBefore(jockeyId, date, '2'))
+		race3 = float(Database.getRaceCountAtArrivalByJockeyBefore(jockeyId, date, '3'))
+		percent1 = race1 / raceCount if raceCount else 0
+		percent2 = race2 / raceCount if raceCount else 0
+		percent3 = race3 / raceCount if raceCount else 0
+		percentShow = (race1+race2+race3) / raceCount if raceCount else 0
+		return [raceCount, percent1, percent2, percent3, percentShow]
+	
 			
 	def getDataForTrainer(self, trainerId, date):
 		raceCount = float(Database.getRaceCountTrainerBefore(trainerId, date))
 		race1 = float(Database.getRaceCountAtArrivalByTrainerBefore(trainerId, date, '1'))
 		race2 =  float(Database.getRaceCountAtArrivalByTrainerBefore(trainerId, date, '2'))
 		race3 = float(Database.getRaceCountAtArrivalByTrainerBefore(trainerId, date, '3'))
-		
-		percent1 = race1 / raceCount
-		percent2 = race2 / raceCount
-		percent3 = race3 / raceCount
-		
-		percentShow = (race1+race2+race3) / raceCount
-		
-		return [trainerId, raceCount, percent1, percent2, percent3, percentShow]
+		percent1 = race1 / raceCount if raceCount else 0
+		percent2 = race2 / raceCount if raceCount else 0
+		percent3 = race3 / raceCount if raceCount else 0
+		percentShow = (race1+race2+race3) / raceCount if raceCount else 0
+		return [raceCount, percent1, percent2, percent3, percentShow]
 	
 		
 		
