@@ -2,6 +2,7 @@ import mysql.connector
 import datetime
 from pprint import pprint
 from datamanager.database import Database
+from datamanager.conf import Conf
 
 class DatasetPreparator:
 	def __init__(self):
@@ -12,6 +13,31 @@ class DatasetPreparator:
 				
 	def __del__(self):
 		self.database.close()
+	
+	def saveTrainingSet(self, start, end):
+		data = self.getTrainingSet(start, end)
+		inputs = wins = shows = ''
+		for day in data:
+			for race in day:
+				wins = wins + ';'.join(str(x) for x in race[0]) + '\n'
+				shows = shows + ';'.join(str(x) for x in race[1]) + '\n'
+				for id, team in enumerate(race[2]):
+					if id != 0:
+						inputs =  inputs + ';'
+					inputs = inputs + ';'.join(str(x) for x in team) 
+				inputs  = inputs + '\n'
+		fname = Conf.TRAINING_SET_WINS.replace('START',start).replace('END',end)
+		f = open(fname, 'w')
+		f.write(wins)
+		f.close()
+		fname = Conf.TRAINING_SET_SHOWS.replace('START',start).replace('END',end)
+		f = open(fname, 'w')
+		f.write(shows)
+		f.close()
+		fname = Conf.TRAINING_SET_INPUTS.replace('START',start).replace('END',end)
+		f = open(fname, 'w')
+		f.write(inputs)
+		f.close()
 	
 	def getTrainingSet(self, start, end):
 		start = datetime.datetime.strptime(start, '%Y-%m-%d').date()

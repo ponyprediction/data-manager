@@ -15,4 +15,4 @@ if len(sys.argv) == 6:
 	if sys.argv[1] == 'get-training-data': 
 		start = sys.argv[3]
 		end = sys.argv[5]
-		DatasetPreparator().getTrainingSet(start, end)
+		DatasetPreparator().saveTrainingSet(start, end)
