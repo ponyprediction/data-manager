@@ -135,9 +135,18 @@ class Database:
 			starts.append(start)
 		return starts
 	
-	
-	
-	
+	@staticmethod
+	def getOdds(teamId):
+		cursor = Database.connection.cursor()
+		cursor.execute('''select teams.odds1, teams.odds2, teams.odds3
+				from teams
+				where teams.id = %s
+				limit 1;''',
+				(teamId,));
+		odds = []
+		for (odds1,odds2,odds3,) in cursor:
+			odds.extend([odds1, odds2, odds3])
+		return odds
 	
 	
 	

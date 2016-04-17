@@ -93,7 +93,16 @@ class DatasetPreparator:
 			data.extend(self.getDataForHorse(horseId, date))
 			data.extend(self.getDataForJockey(jockeyId, date))
 			data.extend(self.getDataForTrainer(trainerId, date))
+			data.extend(self.getOdds(teamId))
 		return data
+	
+	def getOdds(self, teamId):
+		odds = Database.getOdds(teamId)
+		percent = []
+		for odd in odds:
+			percent.append(1.0/odd if odd else 0.0)
+		return percent
+	
 	
 	def getDataForHorse(self, horseId, date):
 		raceCount = float(Database.getRaceCountHorseBefore(horseId, date))

@@ -3,7 +3,7 @@ import numpy as np
 
 class Data:
 	def __init__(self, start, end):
-		self.MIN_TEAMS = 1
+		self.MIN_TEAMS = 0
 		self.MAX_TEAMS = 20
 		self.INPUTS_PER_TEAMS = 12
 		
@@ -15,7 +15,9 @@ class Data:
 		self.test = self.getData(start, end, b, c)
 		
 		self.batchStart = 0
-		self.size = len(self.test['input'])
+		self.size = len(self.training['input'])
+		
+		print(self.size)
 	
 	def nextBacthWin(self, size):
 		start = self.batchStart
@@ -25,6 +27,15 @@ class Data:
 			return self.training['input'][start:end], self.training['win'][start:end]
 		else:
 			return self.training['input'][start:], self.training['win'][start:]
+	
+	def nextBacthShow(self, size):
+		start = self.batchStart
+		end = (self.batchStart + size) % self.size
+		self.batchStart = end
+		if(start < end):
+			return self.training['input'][start:end], self.training['show'][start:end]
+		else:
+			return self.training['input'][start:], self.training['show'][start:]
 	
 	
 	def getData(self, startDay, endDay, startArray, endArray):
