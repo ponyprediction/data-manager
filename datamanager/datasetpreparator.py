@@ -104,7 +104,7 @@ class DatasetPreparator:
 		percent2 = race2 / raceCount if raceCount else 0
 		percent3 = race3 / raceCount if raceCount else 0
 		percentShow = (race1+race2+race3) / raceCount if raceCount else 0
-		return [raceCount, percent1, percent2, percent3, percentShow]
+		return [percent1, percent2, percent3, percentShow]
 	
 	def getDataForJockey(self, jockeyId, date):
 		raceCount = float(Database.getRaceCountJockeyBefore(jockeyId, date))
@@ -115,7 +115,7 @@ class DatasetPreparator:
 		percent2 = race2 / raceCount if raceCount else 0
 		percent3 = race3 / raceCount if raceCount else 0
 		percentShow = (race1+race2+race3) / raceCount if raceCount else 0
-		return [raceCount, percent1, percent2, percent3, percentShow]
+		return [percent1, percent2, percent3, percentShow]
 	
 			
 	def getDataForTrainer(self, trainerId, date):
@@ -127,7 +127,7 @@ class DatasetPreparator:
 		percent2 = race2 / raceCount if raceCount else 0
 		percent3 = race3 / raceCount if raceCount else 0
 		percentShow = (race1+race2+race3) / raceCount if raceCount else 0
-		return [raceCount, percent1, percent2, percent3, percentShow]
+		return [percent1, percent2, percent3, percentShow]
 	
 		
 		
