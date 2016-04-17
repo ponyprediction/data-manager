@@ -1,18 +1,20 @@
 from datamanager.conf import Conf
+from datamanager.data import data
 from pprint import pprint
 import tensorflow as tf
 import numpy as np
 import math
 
 class TensorFlower:
-	def __init__(self):
+	def __init__(self, start, end):
 		self.MAX_TEAMS = 30
 		self.INPUTS_PER_TEAMS = 12
+		self.data = Data(start, end)
 	
-	def trainShow(self, start,end):
+	def trainShow(self):
 		return
 		
-	def trainWin(self, start,end):
+	def trainWin(self):
 		#test data
 		xData = np.array([
 			[0., 0., 0.],
@@ -106,46 +108,6 @@ class TensorFlower:
 		return tf.Variable(tf.zeros([c]))
 		
 		
-	def getInputs(self, start,end):
-		inputs = []
-		fname = Conf.TRAINING_SET_INPUTS.replace('START',start).replace('END',end)
-		with open(fname, 'r') as f:
-			for line in f:
-				a = [float(x) for x in line.split(';')]
-				while(len(a) < self.MAX_TEAMS*self.INPUTS_PER_TEAMS):
-					a.append(0.0)
-				inputs.append(a)
-		inputs = np.array(inputs)
-		return inputs
+	
 		
-	def getShowOutputs(self, start,end):
-		outputs = []
-		fname = Conf.TRAINING_SET_SHOWS.replace('START',start).replace('END',end)
-		with open(fname, 'r') as f:
-			for line in f:
-				list = [(int(x) if x!='\n' else 0) for x in line.split(';')]
-				a = []
-				for i in range(1, self.MAX_TEAMS+1):
-					if i in list:
-						a.append(1.0)
-					else:
-						a.append(0.0)
-				outputs.append(a)
-		outputs = np.array(outputs)
-		return outputs
-		
-	def getWinOutputs(self, start,end):
-		outputs = []
-		fname = Conf.TRAINING_SET_WINS.replace('START',start).replace('END',end)
-		with open(fname, 'r') as f:
-			for line in f:
-				list = [(int(x) if x!='\n' else 0) for x in line.split(';')]
-				a = []
-				for i in range(1, self.MAX_TEAMS+1):
-					if i in list:
-						a.append(1.0)
-					else:
-						a.append(0.0)
-				outputs.append(a)
-		outputs = np.array(outputs)
-		return outputs
+	

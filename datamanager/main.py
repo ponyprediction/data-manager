@@ -20,9 +20,9 @@ if len(sys.argv) == 6:
 	if sys.argv[1] == 'train-show': 
 		start = sys.argv[3]
 		end = sys.argv[5]
-		TensorFlower().trainShow(start, end)
+		TensorFlower(start, end).trainShow()
 	if sys.argv[1] == 'train-win': 
 		start = sys.argv[3]
 		end = sys.argv[5]
-		TensorFlower().trainWin(start, end)
+		TensorFlower(start, end).trainWin()
 
