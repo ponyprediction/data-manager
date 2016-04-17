@@ -1,5 +1,5 @@
-from datamanager.conf import Conf
-from datamanager.data import data
+
+from datamanager.data import Data
 from pprint import pprint
 import tensorflow as tf
 import numpy as np
@@ -7,8 +7,7 @@ import math
 
 class TensorFlower:
 	def __init__(self, start, end):
-		self.MAX_TEAMS = 30
-		self.INPUTS_PER_TEAMS = 12
+		
 		self.data = Data(start, end)
 	
 	def trainShow(self):
@@ -38,13 +37,14 @@ class TensorFlower:
 		yCount = 4
 		
 		#real data
-		xData = self.getInputs(start,end)
-		yData = self.getWinOutputs(start,end)
+		#xData = self.getInputs(start,end)
+		#yData = self.getWinOutputs(start,end)
 		xCount = 30*12
 		yCount = 30
-		HIDDEN_NODES = 64 
-		factor = 0.2
+		HIDDEN_NODES = 32 
+		factor = 0.005
 		raceCount = 1413
+		batchSize = 100
 		
 		# input
 		x = tf.placeholder(tf.float32, [None, xCount])
@@ -70,7 +70,7 @@ class TensorFlower:
 		logits = tf.matmul(hN, W_logits) + b_logits
 		y = tf.nn.softmax(logits)
 		
-		# cleen prediction
+		# clean prediction
 		ones = tf.ones([raceCount], tf.int64)
 		prediction = tf.add(tf.argmax(y,1), ones)
 		
@@ -83,6 +83,10 @@ class TensorFlower:
 
 		# training
 		train_op = tf.train.GradientDescentOptimizer(factor).minimize(loss)
+		
+		# eval
+		correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(yWanted,1))
+		accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 		# init
 		init_op = tf.initialize_all_variables()
@@ -90,13 +94,15 @@ class TensorFlower:
 		sess.run(init_op)
 		
 		# train
-		for i in range(10000):
-			_, loss_val = sess.run([train_op, loss], feed_dict={x: xData, yWanted: yData})
+		for i in range(100000):
+			xBatch, yBatch = self.data.nextBacthWin(batchSize)
+			_, loss_val = sess.run([train_op, loss], feed_dict={x: xBatch, yWanted: yBatch})
 			if i % 100 == 0:
-				print("Step:", i, "Current loss:", loss_val)
+				accuracyValue = sess.run(accuracy, feed_dict={x: self.data.inputs, yWanted: self.data.win})
+				print("Step:", i, "\tLoss:", loss_val, "\tAccuracy:", accuracyValue)
 		
 		# print final prediction
-		print (sess.run(prediction, feed_dict={x: xData}))
+		print (sess.run(prediction, feed_dict={x: self.data.inputs}))
 		
 		sess.close()
 	
