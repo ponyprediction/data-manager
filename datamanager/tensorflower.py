@@ -39,12 +39,11 @@ class TensorFlower:
 		#real data
 		#xData = self.getInputs(start,end)
 		#yData = self.getWinOutputs(start,end)
-		xCount = 30*12
-		yCount = 30
-		HIDDEN_NODES = 32 
-		factor = 0.005
-		raceCount = 1413
-		batchSize = 100
+		xCount = self.data.MAX_TEAMS * self.data.INPUTS_PER_TEAMS
+		yCount = self.data.MAX_TEAMS
+		HIDDEN_NODES = 128 
+		factor = 0.05
+		batchSize = 256
 		
 		# input
 		x = tf.placeholder(tf.float32, [None, xCount])
@@ -71,8 +70,8 @@ class TensorFlower:
 		y = tf.nn.softmax(logits)
 		
 		# clean prediction
-		ones = tf.ones([raceCount], tf.int64)
-		prediction = tf.add(tf.argmax(y,1), ones)
+		#ones = tf.ones([raceCount], tf.int64)
+		#prediction = tf.add(tf.argmax(y,1), ones)
 		
 		# wanted output
 		yWanted = tf.placeholder(tf.float32, [None, yCount])
@@ -98,11 +97,15 @@ class TensorFlower:
 			xBatch, yBatch = self.data.nextBacthWin(batchSize)
 			_, loss_val = sess.run([train_op, loss], feed_dict={x: xBatch, yWanted: yBatch})
 			if i % 100 == 0:
-				accuracyValue = sess.run(accuracy, feed_dict={x: self.data.inputs, yWanted: self.data.win})
-				print("Step:", i, "\tLoss:", loss_val, "\tAccuracy:", accuracyValue)
+				accuracyValueTrain = sess.run(accuracy, feed_dict={x: self.data.training['input'], yWanted: self.data.training['win']})
+				accuracyValueTest = sess.run(accuracy, feed_dict={x: self.data.test['input'], yWanted: self.data.test['win']})
+				print("Step:", i, 
+					"\tLoss:", loss_val, 
+					"\tTrain:", accuracyValueTrain, 
+					"\tTest:", accuracyValueTest)
 		
 		# print final prediction
-		print (sess.run(prediction, feed_dict={x: self.data.inputs}))
+		# print (sess.run(prediction, feed_dict={x: self.data.inputs}))
 		
 		sess.close()
 	
