@@ -5,7 +5,7 @@ class Data:
 	def __init__(self, start, end):
 		self.MIN_TEAMS = 0
 		self.MAX_TEAMS = 20
-		self.INPUTS_PER_TEAMS = 12
+		self.INPUTS_PER_TEAMS = 15
 		
 		a = 0.0
 		b = 0.8
