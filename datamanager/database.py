@@ -1,10 +1,11 @@
 import mysql.connector
+from datamanager.conf import Conf
 
 class Database:
-	connection = mysql.connector.connect(user='ponyprediction', 
-				password='ponyprediction',
-				host='localhost',
-				database='ponyprediction')
+	connection = mysql.connector.connect(user=Conf.DATABASE_USER, 
+				password=Conf.DATABASE_PASSWORD,
+				host=Conf.DATABASE_URL,
+				database=Conf.DATABASE_NAME)
 	"""
 		Horse
 	"""

@@ -10,7 +10,7 @@ class TensorFlower:
 		
 		self.data = Data(start, end)
 	
-	def trainShow(self):
+	"""def trainShow(self):
 		# data
 		xCount = self.data.MAX_TEAMS * self.data.INPUTS_PER_TEAMS
 		yCount = self.data.MAX_TEAMS
@@ -34,16 +34,6 @@ class TensorFlower:
 		w2 = self.getWeights(h1Count, h2Count)
 		b2 = self.getBiases(h2Count)
 		h2 = tf.nn.relu(tf.matmul(h1, w2) + b2)
-		
-		# hidden 3
-		"""w3 = self.getWeights(HIDDEN_NODES, HIDDEN_NODES)
-		b3 = self.getBiases(HIDDEN_NODES)
-		h3 = tf.nn.relu(tf.matmul(h2, w3) + b3)
-		
-		# hidden 4
-		w4 = self.getWeights(HIDDEN_NODES, HIDDEN_NODES)
-		b4 = self.getBiases(HIDDEN_NODES)
-		hN = tf.nn.relu(tf.matmul(h3, w4) + b4)"""
 		
 		# output
 		W_logits = tf.Variable(tf.truncated_normal([h2Count, yCount] , stddev=0.1))
@@ -89,14 +79,14 @@ class TensorFlower:
 		# print final prediction
 		# print (sess.run(prediction, feed_dict={x: self.data.inputs}))
 		
-		sess.close()
+		sess.close()"""
 		
 	def trainWin(self):
 		#real data
 		xCount = self.data.MAX_TEAMS * self.data.INPUTS_PER_TEAMS
 		yCount = self.data.MAX_TEAMS
-		factor = 0.001
-		batchSize = 200
+		factor = 0.005
+		batchSize = 100
 		
 		print(xCount)
 		print(yCount)
@@ -105,31 +95,32 @@ class TensorFlower:
 		x = tf.placeholder(tf.float32, [None, xCount])
 		
 		# hidden 1
-		h1Count = int((xCount-yCount) * 0.66 + yCount)
+		h1Count = int((xCount-yCount) * 0.75 + yCount)
 		w1 = self.getWeights(xCount, h1Count)
 		b1 = self.getBiases(h1Count)
 		h1 = tf.nn.relu(tf.matmul(x, w1) + b1)
 		
 		# hidden 2
-		h2Count = int((xCount-yCount) * 0.33 + yCount)
+		h2Count = int((xCount-yCount) * 0.50 + yCount)
 		w2 = self.getWeights(h1Count, h2Count)
 		b2 = self.getBiases(h2Count)
 		h2 = tf.nn.relu(tf.matmul(h1, w2) + b2)
 		
 		# hidden 3
-		"""w3 = self.getWeights(HIDDEN_NODES, HIDDEN_NODES)
-		b3 = self.getBiases(HIDDEN_NODES)
+		h3Count = int((xCount-yCount) * 0.25 + yCount)
+		w3 = self.getWeights(h2Count, h3Count)
+		b3 = self.getBiases(h3Count)
 		h3 = tf.nn.relu(tf.matmul(h2, w3) + b3)
 		
-		# hidden 4
+		"""# hidden 4
 		w4 = self.getWeights(HIDDEN_NODES, HIDDEN_NODES)
 		b4 = self.getBiases(HIDDEN_NODES)
 		hN = tf.nn.relu(tf.matmul(h3, w4) + b4)"""
 		
 		# output
-		W_logits = tf.Variable(tf.truncated_normal([h2Count, yCount] , stddev=0.1))
+		W_logits = tf.Variable(tf.truncated_normal([h3Count, yCount] , stddev=0.1))
 		b_logits = tf.Variable(tf.zeros([yCount]))
-		logits = tf.matmul(h2, W_logits) + b_logits
+		logits = tf.matmul(h3, W_logits) + b_logits
 		y = tf.nn.softmax(logits)
 		
 		# clean prediction

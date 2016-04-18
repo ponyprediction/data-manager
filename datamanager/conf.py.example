@@ -1,3 +1,4 @@
+# Rename to "conf.py" and complete as needed
 class Conf:
 	# Folders
 	ROOT_DIRECTORY = '/home/user/';
@@ -26,3 +27,10 @@ class Conf:
 	TRAINING_SET_WINS = TRAINING_SETS_FOLDER + "START-to-END.win"
 	TRAINING_SET_SHOWS = TRAINING_SETS_FOLDER + "START-to-END.show"
 	TRAINING_SET_INPUTS = TRAINING_SETS_FOLDER + "START-to-END.inputs"
+	
+	# Other
+	DATABASE_USER = "ponyprediction"
+	DATABASE_NAME = "ponyprediction"
+	DATABASE_PASSWORD = "ponyprediction"
+	DATABASE_URL = "localhost"
+

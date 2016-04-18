@@ -89,7 +89,10 @@ class Parser:
 		html = f.read()
 		f.close()
 		soup = BeautifulSoup(html, "lxml")
-		table = soup.find_all('table', 'excel')[1]
+		tables = soup.find_all('table', 'excel')
+		if len(tables) < 2:
+			return
+		table = tables[1]
 		lines = table.find_all('tr')
 		horses1 = []
 		for line in lines:
@@ -241,21 +244,23 @@ class Parser:
 		table = soup.find_all('table', 'excel')[1]
 		lines = table.find_all('tr')
 		array = []
+		ids = {'id':0, 'win':-1, 'second':-1, 'show':-1, 'fourth':-1}
+		for i, cell in enumerate(lines[0].find_all('td')):
+			text = cell.getText().strip().lower()
+			text = re.sub(r' ', '', text)
+			if text == "simplegagnant" : ids['win'] = i
+			if text == "zeshow" : ids['second'] = i
+			if text == "simpleplacé" : ids['show'] = i
+			if text == "zecouillon" : ids['fourth'] = i
 		for line in lines:
 			cells = line.find_all('td')
-			if len(cells) == 5 and cells[0].getText().strip():
-				id = int(re.search(r'\d+', cells[0].getText()).group())
-				win = Parser.getCleanMoney(cells[1].getText())
-				second = Parser.getCleanMoney(cells[2].getText())
-				show = Parser.getCleanMoney(cells[3].getText())
-				fourth = Parser.getCleanMoney(cells[4].getText())
+			if cells[0].getText().strip():
+				id = int(re.search(r'\d+', cells[ids['id']].getText()).group()) if ids['id'] != -1 else 0
+				win = Parser.getCleanMoney(cells[ids['win']].getText()) if ids['win'] != -1 else 0
+				second = Parser.getCleanMoney(cells[ids['second']].getText()) if ids['second'] != -1 else 0
+				show = Parser.getCleanMoney(cells[ids['show']].getText()) if ids['show'] != -1 else 0
+				fourth = Parser.getCleanMoney(cells[ids['fourth']].getText()) if ids['fourth'] != -1 else 0
 				array.append({'id': id, 'win': win, 'second': second, 'fourth': fourth, 'show': show})
-			if len(cells) == 4 and cells[0].getText().strip():
-				id = int(re.search(r'\d+', cells[0].getText()).group())
-				win = Parser.getCleanMoney(cells[1].getText())
-				second = Parser.getCleanMoney(cells[2].getText())
-				show = Parser.getCleanMoney(cells[3].getText())
-				array.append({'id': id, 'win': win, 'second': second, 'show': show})
 		return array
 	
 	@staticmethod
@@ -286,10 +291,11 @@ class Parser:
 			second = 0.0
 			win = 0.0
 			show = 0.0
-			for x in horsesChoice:
-				if x['id'] == id:
-					prediction = x['place']
-					break
+			if horsesChoice:
+				for x in horsesChoice:
+					if x['id'] == id:
+						prediction = x['place']
+						break
 			for x in arrival:
 				if x['id'] == id and x['horse'] == horse:
 					place = x['place']
