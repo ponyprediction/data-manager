@@ -27,7 +27,10 @@ class Parser:
 		html = f.read()
 		f.close()
 		soup = BeautifulSoup(html, "lxml")
-		links = soup.find_all('a', 'pill')
+		divs = soup.find_all('div', 'pill')
+		links = []
+		for div in divs:
+			links.append(div.find('a'))
 		races = []
 		for a in links:
 			rx = re.compile("C(.[0-9]*)")
