@@ -27,11 +27,10 @@ class Parser:
 		html = f.read()
 		f.close()
 		soup = BeautifulSoup(html, "lxml")
-		table = soup.find("table", "double")
-		links = table.find_all('a', 'pill')
+		links = soup.find_all('a', 'pill')
 		races = []
 		for a in links:
-			rx = re.compile(" C(.[0-9]*)")
+			rx = re.compile("C(.[0-9]*)")
 			localId = int(rx.search(a.getText()).group(1))
 			globalId = int(re.search(r'\d+', a['href']).group())
 			races.append({'localId':localId, 'globalId':globalId})
