@@ -223,7 +223,8 @@ class Parser:
 	
 	@staticmethod
 	def getAge(age):
-		age = re.search(r'\((./\d+)\)', age).group(1)
+		age = re.search(r'\((./\d+)\)', age)
+		age = age.group(1) if age else "0"
 		age = int(re.search(r'\d+', age).group(0))
 		return age
 	
