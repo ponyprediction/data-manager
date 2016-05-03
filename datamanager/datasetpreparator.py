@@ -3,6 +3,7 @@ import datetime
 from pprint import pprint
 from datamanager.database import Database
 from datamanager.conf import Conf
+import sys
 
 class DatasetPreparator:
 	def __init__(self):
@@ -46,12 +47,12 @@ class DatasetPreparator:
 		day = datetime.timedelta(days=1)
 		data = []
 		while date <= end:
-			print(date)
 			data.append(self.getDataForDate(date.strftime('%Y-%m-%d')))
 			date = date + day
 		return data
 	
 	def getDataForDate(self, date):
+		self.overwrite(date)
 		cursor = self.database.cursor()
 		cursor.execute("""select id 
 				from races
@@ -63,11 +64,11 @@ class DatasetPreparator:
 		cursor.close();
 		data = []
 		for raceId in raceIds:
-			print(raceId)
 			data.append(self.getDataForRace(raceId, date))
 		return data
 	
 	def getDataForRace(self, raceId, date):
+		self.overwrite(date + '-' + str(raceId))
 		cursor = self.database.cursor()
 		cursor.execute('''SELECT teams.id
 				FROM teams, teamsInRaces
@@ -105,10 +106,14 @@ class DatasetPreparator:
 	
 	
 	def getDataForHorse(self, horseId, date):
-		raceCount = float(Database.getRaceCountHorseBefore(horseId, date))
-		race1 = float(Database.getRaceCountAtArrivalByHorseBefore(horseId, date, '1'))
-		race2 =  float(Database.getRaceCountAtArrivalByHorseBefore(horseId, date, '2'))
-		race3 = float(Database.getRaceCountAtArrivalByHorseBefore(horseId, date, '3'))
+		end = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.timedelta(days=1)
+		start = end - datetime.timedelta(days=365)
+		end = end.strftime('%Y-%m-%d')
+		start = start.strftime('%Y-%m-%d')
+		raceCount = float(Database.getRaceCountHorse(horseId, start, end))
+		race1 = float(Database.getRaceCountAtArrivalByHorse(horseId, '1', start, end))
+		race2 =  float(Database.getRaceCountAtArrivalByHorse(horseId, '2', start, end))
+		race3 = float(Database.getRaceCountAtArrivalByHorse(horseId, '3', start, end))
 		percent1 = race1 / raceCount if raceCount else 0
 		percent2 = race2 / raceCount if raceCount else 0
 		percent3 = race3 / raceCount if raceCount else 0
@@ -116,10 +121,14 @@ class DatasetPreparator:
 		return [percent1, percent2, percent3, percentShow]
 	
 	def getDataForJockey(self, jockeyId, date):
-		raceCount = float(Database.getRaceCountJockeyBefore(jockeyId, date))
-		race1 = float(Database.getRaceCountAtArrivalByJockeyBefore(jockeyId, date, '1'))
-		race2 =  float(Database.getRaceCountAtArrivalByJockeyBefore(jockeyId, date, '2'))
-		race3 = float(Database.getRaceCountAtArrivalByJockeyBefore(jockeyId, date, '3'))
+		end = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.timedelta(days=1)
+		start = end - datetime.timedelta(days=365)
+		end = end.strftime('%Y-%m-%d')
+		start = start.strftime('%Y-%m-%d')
+		raceCount = float(Database.getRaceCountJockey(jockeyId, start, end))
+		race1 = float(Database.getRaceCountAtArrivalByJockey(jockeyId, '1', start, end))
+		race2 =  float(Database.getRaceCountAtArrivalByJockey(jockeyId,'2', start, end))
+		race3 = float(Database.getRaceCountAtArrivalByJockey(jockeyId, '3', start, end))
 		percent1 = race1 / raceCount if raceCount else 0
 		percent2 = race2 / raceCount if raceCount else 0
 		percent3 = race3 / raceCount if raceCount else 0
@@ -128,16 +137,25 @@ class DatasetPreparator:
 	
 			
 	def getDataForTrainer(self, trainerId, date):
-		raceCount = float(Database.getRaceCountTrainerBefore(trainerId, date))
-		race1 = float(Database.getRaceCountAtArrivalByTrainerBefore(trainerId, date, '1'))
-		race2 =  float(Database.getRaceCountAtArrivalByTrainerBefore(trainerId, date, '2'))
-		race3 = float(Database.getRaceCountAtArrivalByTrainerBefore(trainerId, date, '3'))
+		end = datetime.datetime.strptime(date, "%Y-%m-%d") - datetime.timedelta(days=1)
+		start = end - datetime.timedelta(days=365)
+		end = end.strftime('%Y-%m-%d')
+		start = start.strftime('%Y-%m-%d')
+		raceCount = float(Database.getRaceCountTrainer(trainerId, start, end))
+		race1 = float(Database.getRaceCountAtArrivalByTrainer(trainerId, '1', start, end))
+		race2 =  float(Database.getRaceCountAtArrivalByTrainer(trainerId, '2', start, end))
+		race3 = float(Database.getRaceCountAtArrivalByTrainer(trainerId, '3', start, end))
 		percent1 = race1 / raceCount if raceCount else 0
 		percent2 = race2 / raceCount if raceCount else 0
 		percent3 = race3 / raceCount if raceCount else 0
 		percentShow = (race1+race2+race3) / raceCount if raceCount else 0
 		return [percent1, percent2, percent3, percentShow]
 	
-		
+	def overwrite(self, m):
+		sys.stdout.write('\r')
+		for x in range(0, 80):
+			sys.stdout.write(' ')
+		sys.stdout.write('\r' + m)
+		sys.stdout.flush()	
 		
 	

@@ -10,83 +10,89 @@ class Database:
 		Horse
 	"""
 	@staticmethod
-	def getRaceCountHorseBefore(horseId, date):
+	def getRaceCountHorse(horseId, start, end):
 		cursor = Database.connection.cursor()
 		cursor.execute('''select COUNT(*)
 				from teams, teamsInRaces, races
 				where (teams.horseId=%s 
 					AND teams.id = teamsInRaces.teamId 
 					AND races.id = teamsInRaces.raceId
+					AND races.date > %s
 					AND races.date < %s);''',
-				(horseId,date,));
+				(horseId,start,end,));
 		return str(cursor.fetchone()[0])
 	
 	@staticmethod
-	def getRaceCountAtArrivalByHorseBefore(horseId, date, arrival):
+	def getRaceCountAtArrivalByHorse(horseId, arrival, start, end):
 		cursor = Database.connection.cursor()
 		cursor.execute('''select COUNT(*)
 				from teams, teamsInRaces, races
 				where (teams.horseId=%s 
 					AND teams.id = teamsInRaces.teamId 
 					AND races.id = teamsInRaces.raceId 
-					AND races.date < %s
-					AND teams.arrival = %s);''',
-				(horseId,date,arrival,));
+					AND teams.arrival = %s
+					AND races.date > %s
+					AND races.date < %s);''',
+				(horseId, arrival, start, end,));
 		return str(cursor.fetchone()[0])
 	
 	"""
 		Jockey
 	"""
 	@staticmethod
-	def getRaceCountJockeyBefore(jockeyId, date):
+	def getRaceCountJockey(jockeyId, start, end):
 		cursor = Database.connection.cursor()
 		cursor.execute('''select COUNT(*)
 				from teams, teamsInRaces, races
 				where (teams.jockeyId=%s 
 					AND teams.id = teamsInRaces.teamId 
 					AND races.id = teamsInRaces.raceId
+					AND races.date > %s
 					AND races.date < %s);''',
-				(jockeyId,date,));
+				(jockeyId, start, end,));
 		return str(cursor.fetchone()[0])
 	
 	@staticmethod
-	def getRaceCountAtArrivalByJockeyBefore(jockeyId, date, arrival):
+	def getRaceCountAtArrivalByJockey(jockeyId, arrival, start, end):
 		cursor = Database.connection.cursor()
 		cursor.execute('''select COUNT(*)
 				from teams, teamsInRaces, races
 				where (teams.jockeyId=%s 
 					AND teams.id = teamsInRaces.teamId 
 					AND races.id = teamsInRaces.raceId 
-					AND races.date < %s
-					AND teams.arrival = %s);''',
-				(jockeyId,date,arrival,));
+					AND teams.arrival = %s
+					AND races.date > %s
+					AND races.date < %s);''',
+				(jockeyId,arrival,start, end, ));
 		return str(cursor.fetchone()[0])
 	"""
 		Trainer
 	"""
 	@staticmethod
-	def getRaceCountTrainerBefore(trainerId, date):
+	def getRaceCountTrainer(trainerId, start, end):
 		cursor = Database.connection.cursor()
 		cursor.execute('''select COUNT(*)
 				from teams, teamsInRaces, races
 				where (teams.trainerId=%s 
 					AND teams.id = teamsInRaces.teamId 
 					AND races.id = teamsInRaces.raceId
+					AND races.date > %s
 					AND races.date < %s);''',
-				(trainerId,date,));
+				(trainerId,start, end, ));
 		return str(cursor.fetchone()[0])
 	
 	@staticmethod
-	def getRaceCountAtArrivalByTrainerBefore(trainerId, date, arrival):
+	def getRaceCountAtArrivalByTrainer(trainerId, arrival, start, end):
 		cursor = Database.connection.cursor()
 		cursor.execute('''select COUNT(*)
 				from teams, teamsInRaces, races
-				where (teams.trainerId=%s 
+				where (teams.trainerId = %s
 					AND teams.id = teamsInRaces.teamId 
 					AND races.id = teamsInRaces.raceId 
-					AND races.date < %s
-					AND teams.arrival = %s);''',
-				(trainerId,date,arrival,));
+					AND teams.arrival = %s
+					AND races.date > %s
+					AND races.date < %s);''',
+				(trainerId, arrival, start, end));
 		return str(cursor.fetchone()[0])
 	
 	"""
