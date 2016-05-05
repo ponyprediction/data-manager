@@ -1,8 +1,0 @@
-DROP TABLE IF EXISTS `starts`;
-CREATE TABLE IF NOT EXISTS `starts` (
-	`id` int NOT NULL AUTO_INCREMENT,
-	`oddsPlaced` DOUBLE NOT NULL,
-	`oddsWin` DOUBLE NOT NULL,
-	PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
