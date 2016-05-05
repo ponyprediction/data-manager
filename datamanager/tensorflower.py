@@ -85,8 +85,9 @@ class TensorFlower:
 		#real data
 		xCount = self.data.MAX_TEAMS * self.data.INPUTS_PER_TEAMS
 		yCount = self.data.MAX_TEAMS
-		factor = 0.005
+		factor = 0.00225
 		batchSize = 100
+		xx = 1.2
 		
 		print(xCount)
 		print(yCount)
@@ -95,19 +96,19 @@ class TensorFlower:
 		x = tf.placeholder(tf.float32, [None, xCount])
 		
 		# hidden 1
-		h1Count = int((xCount-yCount) * 0.75 + yCount)
+		h1Count = int((xCount-yCount) * 0.75 * xx + yCount)
 		w1 = self.getWeights(xCount, h1Count)
 		b1 = self.getBiases(h1Count)
 		h1 = tf.nn.relu(tf.matmul(x, w1) + b1)
 		
 		# hidden 2
-		h2Count = int((xCount-yCount) * 0.50 + yCount)
+		h2Count = int((xCount-yCount) * 0.50 * xx + yCount)
 		w2 = self.getWeights(h1Count, h2Count)
 		b2 = self.getBiases(h2Count)
 		h2 = tf.nn.relu(tf.matmul(h1, w2) + b2)
 		
 		# hidden 3
-		h3Count = int((xCount-yCount) * 0.25 + yCount)
+		h3Count = int((xCount-yCount) * 0.25 * xx + yCount)
 		w3 = self.getWeights(h2Count, h3Count)
 		b3 = self.getBiases(h3Count)
 		h3 = tf.nn.relu(tf.matmul(h2, w3) + b3)
