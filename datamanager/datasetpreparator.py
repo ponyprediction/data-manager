@@ -91,10 +91,10 @@ class DatasetPreparator:
 		data = []
 		trainerIds = Database.getMembersInTeam(teamId)
 		for (horseId, jockeyId, trainerId) in trainerIds:
-			data.extend(self.getDataForHorse(horseId, date))
-			data.extend(self.getDataForJockey(jockeyId, date))
-			data.extend(self.getDataForTrainer(trainerId, date))
-			data.extend(self.getOdds(teamId))
+			data.extend(self.getDataForHorse(horseId, date)) # 4
+			data.extend(self.getDataForJockey(jockeyId, date)) # 4
+			data.extend(self.getDataForTrainer(trainerId, date)) # 4
+			data.extend(self.getOdds(teamId)) # 3
 		return data
 	
 	def getOdds(self, teamId):

@@ -1,5 +1,6 @@
 from datamanager.conf import Conf
 import numpy as np
+from pprint import pprint
 
 class Data:
 	def __init__(self, start, end):
@@ -55,14 +56,17 @@ class Data:
 					a.append(0.0)
 				inputs.append(a[:self.MAX_TEAMS*self.INPUTS_PER_TEAMS])
 				# wins
-				a = []
-				list = [(int(x) if x!='\n' else 0) for x in lW.split(';')]
+				w = []
 				for i in range(1, self.MAX_TEAMS+1):
-					if i in list:
-						a.append(1.0)
-					else:
-						a.append(0.0)
-				wins.append(a[:self.MAX_TEAMS])
+					w.append(0.0)
+				winners = lW.split(';')
+				for winner in winners:
+					if(len(winner.split(':')) == 2):
+						id = int(winner.split(':')[0])
+						money = float(winner.split(':')[1])
+						w[id-1] = money
+						w[id-1] = 1.0
+				wins.append(w[:self.MAX_TEAMS])
 				# shows
 				a = []
 				list = [(int(x) if x!='\n' else 0) for x in lS.split(';')]
@@ -72,69 +76,11 @@ class Data:
 					else:
 						a.append(0.0)
 				shows.append(a[:self.MAX_TEAMS])
-		#
 		size = float(len(inputs))
 		startArray = int(size * startArray)
 		endArray = int(size * endArray)
 		inputs = np.array(inputs[startArray:endArray])
 		wins = np.array(wins[startArray:endArray])
 		shows = np.array(shows[startArray:endArray])
-		#
 		return {'input':inputs, 'win':wins, 'show':shows}
-		
-	
-	
-	
-	
-	"""def getInputs(self, startDay, endDay, startArray, endArray):
-		inputs = []
-		fname = Conf.TRAINING_SET_INPUTS.replace('START',startDay).replace('END',endDay)
-		with open(fname, 'r') as f:
-			for line in f:
-				a = [float(x) for x in line.split(';')]
-				while(len(a) < self.MAX_TEAMS*self.INPUTS_PER_TEAMS):
-					a.append(0.0)
-				inputs.append(a[:self.MAX_TEAMS*self.INPUTS_PER_TEAMS])
-		size = float(len(inputs))
-		startArray = int(size * startArray)
-		endArray = int(size * endArray)
-		inputs = np.array(inputs[startArray:endArray])
-		return inputs
-	
-	def getWinOutputs(self, startDay, endDay, startArray, endArray):
-		outputs = []
-		fname = Conf.TRAINING_SET_WINS.replace('START',startDay).replace('END',endDay)
-		with open(fname, 'r') as f:
-			for line in f:
-				list = [(int(x) if x!='\n' else 0) for x in line.split(';')]
-				a = []
-				for i in range(1, self.MAX_TEAMS+1):
-					if i in list:
-						a.append(1.0)
-					else:
-						a.append(0.0)
-				outputs.append(a[:self.MAX_TEAMS])
-		size = float(len(outputs))
-		startArray = int(size * startArray)
-		endArray = int(size * endArray)
-		outputs = np.array(outputs[startArray:endArray])
-		return outputs
-		
-	def getShowOutputs(self, startDay, endDay, startArray, endArray):
-		outputs = []
-		fname = Conf.TRAINING_SET_SHOWS.replace('START',startDay).replace('END',endDay)
-		with open(fname, 'r') as f:
-			for line in f:
-				list = [(int(x) if x!='\n' else 0) for x in line.split(';')]
-				a = []
-				for i in range(1, self.MAX_TEAMS+1):
-					if i in list:
-						a.append(1.0)
-					else:
-						a.append(0.0)
-				outputs.append(a[:self.MAX_TEAMS])
-		size = float(len(outputs))
-		startArray = int(size * startArray)
-		endArray = int(size * endArray)
-		outputs = np.array(outputs[startArray:endArray])
-		return outputs"""
+

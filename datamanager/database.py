@@ -114,7 +114,7 @@ class Database:
 	@staticmethod
 	def getWinners(raceId):
 		cursor = Database.connection.cursor()
-		cursor.execute('''select teams.start
+		cursor.execute('''select teams.start, teams.firstMoney
 				from teamsInRaces, teams, races
 				where (teamsInRaces.raceId = %s
 					AND teams.id = teamsInRaces.teamId 
@@ -122,10 +122,9 @@ class Database:
 					AND teams.firstMoney > 0);''',
 				(raceId,));
 		starts = []
-		for (start,) in cursor:
-			starts.append(start)
+		for ((start,firstMoney,)) in cursor:
+			starts.append(str(start) + ':' + str(firstMoney))
 		return starts
-	
 	
 	@staticmethod
 	def getShows(raceId):

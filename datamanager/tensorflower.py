@@ -85,7 +85,7 @@ class TensorFlower:
 		#real data
 		xCount = self.data.MAX_TEAMS * self.data.INPUTS_PER_TEAMS
 		yCount = self.data.MAX_TEAMS
-		factor = 0.00225
+		factor = 0.05
 		batchSize = 100
 		xx = 1.2
 		
@@ -123,6 +123,7 @@ class TensorFlower:
 		b_logits = tf.Variable(tf.zeros([yCount]))
 		logits = tf.matmul(h3, W_logits) + b_logits
 		y = tf.nn.softmax(logits)
+		#y = logits
 		
 		# clean prediction
 		#ones = tf.ones([raceCount], tf.int64)
@@ -132,8 +133,12 @@ class TensorFlower:
 		yWanted = tf.placeholder(tf.float32, [None, yCount])
 
 		# error
-		cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits, yWanted)
-		loss = tf.reduce_mean(cross_entropy)
+		#cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits, yWanted)
+		#loss = tf.reduce_mean(cross_entropy)
+		#loss = 0.1		
+		diff = tf.reduce_sum(tf.abs(tf.sub(y, yWanted)))
+		s = tf.reduce_sum(yWanted)
+		loss = tf.truediv(diff, s)
 
 		# training
 		train_op = tf.train.GradientDescentOptimizer(factor).minimize(loss)
@@ -141,6 +146,8 @@ class TensorFlower:
 		# eval
 		correct_prediction = tf.equal(tf.argmax(y,1), tf.argmax(yWanted,1))
 		accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+		
+		#stuff
 
 		# init
 		init_op = tf.initialize_all_variables()
@@ -148,20 +155,25 @@ class TensorFlower:
 		sess.run(init_op)
 		
 		# train
+		s = 200
 		for i in range(10000000):
 			xBatch, yBatch = self.data.nextBacthWin(batchSize)
 			_, loss_val = sess.run([train_op, loss], feed_dict={x: xBatch, yWanted: yBatch})
-			if i % 200 == 0:
+			if i % (s*50) == 0:
+				print('Step\t| Loss\t\t| Train\t\t|\t       \t| Test\t\t|\t   ')
+			if i % s == 0:
 				accuracyValueTrain = sess.run(accuracy, feed_dict={x: self.data.training['input'], yWanted: self.data.training['win']})
+				diffTrain = sess.run(diff, feed_dict={x: self.data.training['input'], yWanted: self.data.training['win']})
 				accuracyValueTest = sess.run(accuracy, feed_dict={x: self.data.test['input'], yWanted: self.data.test['win']})
-				print("Step:", i, 
-					"\tLoss:", loss_val, 
-					"\tTrain:", accuracyValueTrain, 
-					"\tTest:", accuracyValueTest)
-		
-		# print final prediction
-		# print (sess.run(prediction, feed_dict={x: self.data.inputs}))
-		
+				diffTest = sess.run(diff, feed_dict={x: self.data.test['input'], yWanted: self.data.test['win']})
+				lossTrain = sess.run(loss, feed_dict={x: self.data.test['input'], yWanted: self.data.test['win']})
+				print("%7d\t|" % i, 
+					"\t%4.4f\t|" % lossTrain,
+					"\t%4.4f\t|" % accuracyValueTrain, 
+					"\t%4.2f\t|" % diffTrain,
+					"\t%4.4f\t|" % accuracyValueTest,
+					"\t%4.2f" % diffTest,
+					)
 		sess.close()
 	
 	def getWeights(self, i, o):
