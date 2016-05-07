@@ -129,7 +129,7 @@ class Database:
 	@staticmethod
 	def getShows(raceId):
 		cursor = Database.connection.cursor()
-		cursor.execute('''select teams.start
+		cursor.execute('''select teams.start, teams.showMoney
 				from teamsInRaces, teams, races
 				where (teamsInRaces.raceId = %s
 					AND teams.id = teamsInRaces.teamId 
@@ -137,8 +137,8 @@ class Database:
 					AND teams.showMoney > 0);''',
 				(raceId,));
 		starts = []
-		for (start,) in cursor:
-			starts.append(start)
+		for ((start,showMoney,)) in cursor:
+			starts.append(str(start) + ':' + str(showMoney))
 		return starts
 	
 	@staticmethod

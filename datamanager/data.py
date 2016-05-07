@@ -64,18 +64,21 @@ class Data:
 					if(len(winner.split(':')) == 2):
 						id = int(winner.split(':')[0])
 						money = float(winner.split(':')[1])
-						w[id-1] = money
 						w[id-1] = 1.0
+						w[id-1] = money
 				wins.append(w[:self.MAX_TEAMS])
 				# shows
-				a = []
-				list = [(int(x) if x!='\n' else 0) for x in lS.split(';')]
+				s = []
 				for i in range(1, self.MAX_TEAMS+1):
-					if i in list:
-						a.append(1.0)
-					else:
-						a.append(0.0)
-				shows.append(a[:self.MAX_TEAMS])
+					s.append(0.0)
+				shows_ = lS.split(';')
+				for show in shows_:
+					if(len(show.split(':')) == 2):
+						id = int(show.split(':')[0])
+						money = float(show.split(':')[1])
+						s[id-1] = money
+						s[id-1] = 1.0
+				shows.append(s[:self.MAX_TEAMS])
 		size = float(len(inputs))
 		startArray = int(size * startArray)
 		endArray = int(size * endArray)
